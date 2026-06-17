@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamDashboard - GRUPO 2.1</title>
+    <meta name="description" content="Dashboard de equipo desplegado en Cloudflare Pages - Grupo 2.1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ============================================ -->
+    <!-- SIDEBAR -->
+    <!-- ============================================ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-cubes"></i>
+                <span>TeamDash</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="tasks">
+                <i class="fas fa-tasks"></i>
+                <span>Tareas</span>
+                <span class="badge" id="taskBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-page="members">
+                <i class="fas fa-users"></i>
+                <span>Miembros</span>
+            </a>
+            <a href="#" class="nav-item" data-page="calendar">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendario</span>
+            </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Configuración</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="avatar">EF</div>
+                <div>
+                    <div class="user-name">Emilson Flores</div>
+                    <div class="user-role">Administrador</div>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ============================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================ -->
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="top-header">
+            <div class="header-left">
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="pageSubtitle">Resumen general del equipo - Grupo 2.1</p>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar..." id="searchInput">
+                </div>
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- ============================================ -->
+        <!-- PAGE: DASHBOARD -->
+        <!-- ============================================ -->
+        <section class="page active" id="page-dashboard">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #2e7d32;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalMembers">0</h3>
+                        <p>Miembros</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 12%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #1565c0;">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalTasks">0</h3>
+                        <p>Tareas Totales</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 8%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0; color: #e65100;">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pendingTasks">0</h3>
+                        <p>Pendientes</p>
+                    </div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-down"></i> 5%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #f3e5f5; color: #6a1b9a;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completedTasks">0</h3>
+                        <p>Completadas</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 23%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts & Activity -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Progreso Semanal</h3>
+                        <select id="weekFilter">
+                            <option value="7">Última semana</option>
+                            <option value="14">Últimas 2 semanas</option>
+                            <option value="30">Último mes</option>
+                        </select>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" id="weeklyChart">
+                            <!-- Barras generadas por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-list"></i> Actividad Reciente</h3>
+                        <button class="btn-text" id="viewAllActivity">Ver todas</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="activityList">
+                            <!-- Actividad generada por JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Members Preview -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user-friends"></i> Miembros del Equipo</h3>
+                    <button class="btn-primary btn-sm" id="addMemberBtn">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="team-grid" id="teamGrid">
+                        <!-- Miembros generados por JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE: TASKS -->
+        <!-- ============================================ -->
+        <section class="page" id="page-tasks">
+            <div class="page-actions">
+                <div class="task-filters">
+                    <button class="filter-btn active" data-filter="all">Todas</button>
+                    <button class="filter-btn" data-filter="pending">Pendientes</button>
+                    <button class="filter-btn" data-filter="completed">Completadas</button>
+                    <button class="filter-btn" data-filter="high">Alta Prioridad</button>
+                </div>
+                <button class="btn-primary" id="openTaskModal">
+                    <i class="fas fa-plus"></i> Nueva Tarea
+                </button>
+            </div>
+
+            <div class="task-board" id="taskBoard">
+                <!-- Tareas generadas por JS -->
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE: MEMBERS -->
+        <!-- ============================================ -->
+        <section class="page" id="page-members">
+            <div class="members-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar miembro..." id="memberSearch">
+                </div>
+                <button class="btn-primary" id="openMemberModal">
+                    <i class="fas fa-user-plus"></i> Agregar Miembro
+                </button>
+            </div>
+            <div class="members-grid" id="membersGrid">
+                <!-- Miembros generados por JS -->
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE: CALENDAR -->
+        <!-- ============================================ -->
+        <section class="page" id="page-calendar">
+            <div class="calendar-header">
+                <button class="btn-icon" id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                <h2 id="currentMonth"></h2>
+                <button class="btn-icon" id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendario generado por JS -->
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- PAGE: SETTINGS -->
+        <!-- ============================================ -->
+        <section class="page" id="page-settings">
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3><i class="fas fa-palette"></i> Apariencia</h3>
+                    <div class="settings-option">
+                        <label>Tema</label>
+                        <div class="theme-options">
+                            <button class="theme-option active" data-theme="light">
+                                <i class="fas fa-sun"></i> Claro
+                            </button>
+                            <button class="theme-option" data-theme="dark">
+                                <i class="fas fa-moon"></i> Oscuro
+                            </button>
+                            <button class="theme-option" data-theme="system">
+                                <i class="fas fa-desktop"></i> Sistema
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3><i class="fas fa-database"></i> Datos</h3>
+                    <div class="settings-option">
+                        <label>Gestión de datos</label>
+                        <div class="settings-buttons">
+                            <button class="btn-secondary" id="exportData">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                            <button class="btn-secondary" id="importData">
+                                <i class="fas fa-upload"></i> Importar
+                            </button>
+                            <button class="btn-danger" id="clearData">
+                                <i class="fas fa-trash"></i> Borrar Todo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3><i class="fas fa-info-circle"></i> Acerca de</h3>
+                    <div class="settings-option">
+                        <p><strong>Versión:</strong> 2.0.0</p>
+                        <p><strong>Desplegado en:</strong> Cloudflare Pages</p>
+                        <p><strong>Equipo:</strong> Grupo 2.1</p>
+                        <p><strong>Integrantes:</strong> Emilson Flores, [Nombre2], [Nombre3]</p>
+                        <p><strong>Repositorio:</strong> <a href="https://github.com/84jvhv-vg/grupo2.1" target="_blank">GitHub</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================ -->
+    <!-- MODALS -->
+    <!-- ============================================ -->
+    
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Nueva Tarea</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="taskForm">
+                    <input type="hidden" id="taskId">
+                    <div class="form-group">
+                        <label>Título de la tarea *</label>
+                        <input type="text" id="taskTitle" placeholder="Escribe el título..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="taskDescription" rows="3" placeholder="Descripción detallada..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Prioridad</label>
+                            <select id="taskPriority">
+                                <option value="low">🟢 Baja</option>
+                                <option value="medium" selected>🟡 Media</option>
+                                <option value="high">🔴 Alta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha límite</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Asignado a</label>
+                        <select id="taskAssignee">
+                            <option value="">Sin asignar</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary modal-close">Cancelar</button>
+                <button class="btn-primary" id="saveTask">Guardar Tarea</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Modal -->
+    <div class="modal" id="memberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="memberModalTitle">Agregar Miembro</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="memberForm">
+                    <input type="hidden" id="memberId">
+                    <div class="form-group">
+                        <label>Nombre completo *</label>
+                        <input type="text" id="memberName" placeholder="Nombre completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="memberEmail" placeholder="email@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Rol</label>
+                        <select id="memberRole">
+                            <option value="developer">Desarrollador</option>
+                            <option value="designer">Diseñador</option>
+                            <option value="manager">Gerente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Avatar</label>
+                        <input type="text" id="memberAvatar" placeholder="URL de la imagen" value="https://i.pravatar.cc/150">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary modal-close">Cancelar</button>
+                <button class="btn-primary" id="saveMember">Guardar Miembro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================ -->
+    <script src="script.js"></script>
+</body>
+</html>
